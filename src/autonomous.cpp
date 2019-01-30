@@ -32,16 +32,18 @@ void autonomous()
   flipper.set_brake_mode       (pros::E_MOTOR_BRAKE_HOLD);
 
   int distance;
-  distance = -(46*900)/(4*M_PI);
+  distance = -(45*900)/(4*M_PI);// move 45 inch back
+  // the measurement is not accurate and you may need to fine tune
 
   leftfront.move_relative  (distance, 200);
   leftback.move_relative   (distance, 200);
   rightfront.move_relative (distance, 200);
   rightback.move_relative  (distance, 200);
 
-pros::delay(2000);
+pros::delay(2000); // wait 2 sec until finished move.
+// need to adjust depend on distance
 
-distance = (60*900)/(4*M_PI);
+distance = (60*900)/(4*M_PI); // move 60 inch
 
 leftfront.move_relative  (distance, 200);
 leftback.move_relative   (distance, 200);
@@ -50,16 +52,17 @@ rightback.move_relative  (distance, 200);
 
 pros::delay (3500);
 
-distance = 790;
+distance = 790; // turn 90 degree
 
 leftfront.move_relative  (-distance, 200);
 leftback.move_relative   (-distance, 200);
 rightfront.move_relative (distance, 200);
 rightback.move_relative  (distance, 200);
 
-pros::delay (500);
+pros::delay (500);// wait enghout time until finished move.
+// need to adjust depend on distance
 
-distance = -(65*900)/(4*M_PI);
+distance = -(65*900)/(4*M_PI); // move 65 inch back
 
 leftfront.move_relative  (distance, 200);
 leftback.move_relative   (distance, 200);
