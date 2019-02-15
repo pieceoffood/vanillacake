@@ -21,6 +21,24 @@ prosv5 upload --slot 5 (upload the program to V5 slot 5)
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+void shootball() {
+  //catapult
+  //
+  if (limitswitchball.get_value()==1) {
+    catapult.tare_position ( );
+  }
+  if (catapult.get_position()>100 && catapult.get_position()<200 )
+  {
+    catapult.move_velocity  (25);
+  }		else
+  {
+    catapult.move_velocity  (100);
+  }
+
+}
+
+
 void opcontrol() {
 
   pros::lcd::initialize();
@@ -88,7 +106,7 @@ void opcontrol() {
 		//catapult
 		if (master.get_digital (DIGITAL_X))
 		{
-			catapult.move_velocity  (200);
+			shootball();
     }		else
 		{
 			catapult.move_velocity  (0);

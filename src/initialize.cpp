@@ -14,6 +14,7 @@ pros::Motor catapult   (13, pros::E_MOTOR_GEARSET_36, true);
 pros::ADIDigitalIn limitswitch  (1);
 pros::ADIAnalogIn potentiameter (2);
 pros::ADIAnalogIn ballshooterp  (3);
+pros::ADIDigitalIn limitswitchball  (4);
 pros::ADIDigitalIn blue (7); // use jumper to select side blue=1 and red=0
 pros::ADIDigitalIn back (8); // use jumper to select front=0 and back=1
 
