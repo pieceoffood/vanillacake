@@ -24,10 +24,6 @@ prosv5 upload --slot 5 (upload the program to V5 slot 5)
 
 void shootball() {
   //catapult
-  //
-  if (limitswitchball.get_value()==1) {
-    catapult.tare_position ( );
-  }
   if (catapult.get_position()>100 && catapult.get_position()<200 )
   {
     catapult.move_velocity  (25);
@@ -45,27 +41,23 @@ void opcontrol() {
 	while(true){
 		int left  = master.get_analog (ANALOG_LEFT_Y);
 		int right = master.get_analog (ANALOG_RIGHT_X);
-
-		// chasis arcade drive
-			leftfront.move  (left - right);
-			leftback.move   (left - right);
-			rightfront.move (left + right);
-			rightback.move  (left + right);
-
-		//lift
-		//pros::potentiameter.get_value()
+    //pros::potentiameter.get_value()
 		pros::lcd::print(0, "limitswitch: %d\n", limitswitch.get_value());
 		pros::lcd::print(1, "potentiameter: %d\n", potentiameter.get_value());
 		pros::lcd::print(2, "left position: %f\n", leftfront.get_position());
 		pros::lcd::print(3, "right position: %f\n", rightfront.get_position());
+
+		// chasis arcade drive
     if ( master.get_digital(DIGITAL_DOWN))  {
-			leftfront.tare_position ( );
-			rightfront.tare_position ( );
-		}
+      leftfront.tare_position ( );
+      rightfront.tare_position ( );
+    }
+		leftfront.move  (left - right);
+		leftback.move   (left - right);
+		rightfront.move (left + right);
+		rightback.move  (left + right);
 
-
-
-
+		//lift
 		if (master.get_digital (DIGITAL_R1))
 		{
 			lift.move_velocity  (200);
@@ -104,6 +96,9 @@ void opcontrol() {
     }
 
 		//catapult
+    if (limitswitchball.get_value()==1) {
+      catapult.tare_position ( );
+    }
 		if (master.get_digital (DIGITAL_X))
 		{
 			shootball();
