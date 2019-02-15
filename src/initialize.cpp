@@ -1,14 +1,24 @@
 #include "main.h"
+#include "config.hpp"
 
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
-}
+
+pros::Controller master (pros::E_CONTROLLER_MASTER);
+pros::Motor leftfront  (1, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
+pros::Motor leftback   (2, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
+pros::Motor rightfront (3, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_COUNTS);
+pros::Motor rightback  (4, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_COUNTS);
+pros::Motor lift       (20, pros::E_MOTOR_GEARSET_18, false);
+pros::Motor claw       (12, pros::E_MOTOR_GEARSET_18, true);
+pros::Motor ballintake (11, pros::E_MOTOR_GEARSET_18, false);
+pros::Motor catapult   (13, pros::E_MOTOR_GEARSET_36, true);
+pros::ADIDigitalIn limitswitch  (1);
+pros::ADIAnalogIn potentiameter (2);
+pros::ADIAnalogIn ballshooterp  (3);
+pros::ADIDigitalIn blue (7); // use jumper to select side blue=1 and red=0
+pros::ADIDigitalIn back (8); // use jumper to select front=0 and back=1
+
+
+
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -17,10 +27,7 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
 
-	pros::lcd::register_btn1_cb(on_center_button);
 }
 
 /**

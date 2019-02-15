@@ -1,4 +1,12 @@
 #include "main.h"
+#include "config.hpp"
+/*
+cd (change directory)
+cd .. (go up one level)
+prosv5 make clean (clean everything)
+prosv5 build-compile-commands (compile the code)
+prosv5 upload --slot 5 (upload the program to V5 slot 5)
+*/
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -15,66 +23,76 @@
  */
 void opcontrol() {
 
-	pros::Controller master (pros::E_CONTROLLER_MASTER);
-	pros::Motor leftfront  (1, pros::E_MOTOR_GEARSET_18, false);
-	pros::Motor leftback   (2, pros::E_MOTOR_GEARSET_18, true);
-	pros::Motor rightfront (3, pros::E_MOTOR_GEARSET_18, true);
-	pros::Motor rightback  (4, pros::E_MOTOR_GEARSET_18, false);
-	pros::Motor liftleft   (11, pros::E_MOTOR_GEARSET_18, false);
-	pros::Motor liftright  (12, pros::E_MOTOR_GEARSET_18, true);
-	pros::Motor flipper    (6, pros::E_MOTOR_GEARSET_18, false);
-
-	leftfront.set_encoder_units  (pros::E_MOTOR_ENCODER_COUNTS);
-	leftback.set_encoder_units   (pros::E_MOTOR_ENCODER_COUNTS);
-	rightfront.set_encoder_units (pros::E_MOTOR_ENCODER_COUNTS);
-	rightback.set_encoder_units  (pros::E_MOTOR_ENCODER_COUNTS);
-	liftleft.set_brake_mode      (pros::E_MOTOR_BRAKE_BRAKE);
-	liftright.set_brake_mode     (pros::E_MOTOR_BRAKE_BRAKE);
-	flipper.set_brake_mode       (pros::E_MOTOR_BRAKE_HOLD);
-
+  pros::lcd::initialize();
 	while(true){
 		int left  = master.get_analog (ANALOG_LEFT_Y);
-		int right = master.get_analog (ANALOG_RIGHT_Y);
+		int right = master.get_analog (ANALOG_RIGHT_X);
 
-			leftfront.move_velocity (left);
-			leftback.move_velocity  (left);
-			rightfront.move_velocity (right);
-			rightback.move_velocity  (right);
+		// chasis arcade drive
+			leftfront.move  (left - right);
+			leftback.move   (left - right);
+			rightfront.move (left + right);
+			rightback.move  (left + right);
+
+		//lift
+		//pros::potentiameter.get_value()
+		pros::lcd::print(0, "limitswitch: %d\n", limitswitch.get_value());
+		pros::lcd::print(1, "potentiameter: %d\n", potentiameter.get_value());
+		pros::lcd::print(2, "left position: %f\n", leftfront.get_position());
+		pros::lcd::print(3, "right position: %f\n", rightfront.get_position());
+    if ( master.get_digital(DIGITAL_DOWN))  {
+			leftfront.tare_position ( );
+			rightfront.tare_position ( );
+		}
+
+
+
 
 		if (master.get_digital (DIGITAL_R1))
 		{
-			liftleft.move_velocity  (127);
-			liftright.move_velocity (127);
-    }
-
-		else if (master.get_digital (DIGITAL_R2))
+			lift.move_velocity  (200);
+    }		else if (master.get_digital (DIGITAL_R2) && limitswitch.get_value()==0)
 		{
-			liftleft.move_velocity  (-127);
-			liftright.move_velocity (-127);
-    }
-
-		else
+			lift.move_velocity  (-150);
+    }		else
 		{
-			liftleft.move_velocity  (0);
-			liftright.move_velocity (0);
-    }
-
-		if (master.get_digital (DIGITAL_L1))
-		{
-			flipper.move_velocity(100);
+			lift.move_velocity  (0);
 		}
 
-		else if (master.get_digital (DIGITAL_L2))
+		// claw only activat during 1700- 2410
+		// There is overshoot issue and this range 1850 - 2350 is right for coarse stop
+		if (master.get_digital (DIGITAL_L1) && potentiameter.get_value()>1700)
 		{
-			flipper.move_velocity(-100);
-		}
 
-		else
+			claw.move_velocity  (-100); // up/
+
+    }		else if (master.get_digital (DIGITAL_L2) && potentiameter.get_value()<2500)
 		{
-			flipper.move_velocity(0);
-		}
+			claw.move_velocity  (100); // down
+    }		else
+		{
+			claw.move_velocity  (0);
+    }
 
-		pros::delay(3);
+		//ballintake
+		if (master.get_digital (DIGITAL_A)) 	{
+			ballintake.move_velocity  (100);
+    }		else
+		if (master.get_digital (DIGITAL_Y))		{
+			ballintake.move_velocity  (-100);
+		}		else
+		{
+			ballintake.move_velocity  (0);
+    }
+
+		//catapult
+		if (master.get_digital (DIGITAL_X))
+		{
+			catapult.move_velocity  (200);
+    }		else
+		{
+			catapult.move_velocity  (0);
+    }
+	pros::delay (10);
 	}
-
 }

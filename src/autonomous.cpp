@@ -1,5 +1,6 @@
 #include "main.h"
 #include "cmath"
+#include "config.hpp"
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -12,63 +13,116 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
+int automode=100;
+int speed =100;
+int distance;
+
+void driveRelative(float distance, int speed) {
+  float startpoint=leftfront.get_position();
+  leftfront.move_relative  (distance, speed);
+  leftback.move_relative   (distance, speed);
+  rightfront.move_relative (distance, speed);
+  rightback.move_relative  (distance, speed);
+  while (fabs(leftfront.get_position()-startpoint)<=fabs(distance)) {
+    pros::delay(20);
+  }
+
+}
 void autonomous()
 {
-  pros::Controller master (pros::E_CONTROLLER_MASTER);
-  pros::Motor leftfront  (1, pros::E_MOTOR_GEARSET_18, false);
-  pros::Motor leftback   (2, pros::E_MOTOR_GEARSET_18, true);
-  pros::Motor rightfront (3, pros::E_MOTOR_GEARSET_18, true);
-  pros::Motor rightback  (4, pros::E_MOTOR_GEARSET_18, false);
-  pros::Motor liftleft   (11, pros::E_MOTOR_GEARSET_18, false);
-  pros::Motor liftright  (12, pros::E_MOTOR_GEARSET_18, true);
-  pros::Motor flipper    (6, pros::E_MOTOR_GEARSET_18, false);
+  ballintake.set_encoder_units (pros::E_MOTOR_ENCODER_COUNTS);
+  catapult.set_encoder_units   (pros::E_MOTOR_ENCODER_COUNTS);
+  int blueside ;
+  int backside;
+  automode = blue.get_value() + back.get_value()*2;
 
-  leftfront.set_encoder_units  (pros::E_MOTOR_ENCODER_COUNTS);
-  leftback.set_encoder_units   (pros::E_MOTOR_ENCODER_COUNTS);
-  rightfront.set_encoder_units (pros::E_MOTOR_ENCODER_COUNTS);
-  rightback.set_encoder_units  (pros::E_MOTOR_ENCODER_COUNTS);
-  liftleft.set_brake_mode      (pros::E_MOTOR_BRAKE_BRAKE);
-  liftright.set_brake_mode     (pros::E_MOTOR_BRAKE_BRAKE);
-  flipper.set_brake_mode       (pros::E_MOTOR_BRAKE_HOLD);
-/*
-  int distance;
-  distance = -(45*900)/(4*M_PI);// move 45 inch back
-  // the measurement is not accurate and you may need to fine tune
+  pros::lcd::initialize();
+  pros::lcd::print(2, "blue: %d\n", blue.get_value());
+  pros::lcd::print(3, "back: %d\n", back.get_value());
+  pros::lcd::print(4, "automode: %d\n", automode);
+  int side;
+  if (blueside) {
+    side = -1;
+  } else {
+    side = 1;
+  }
+  // 0 red front
+  // 1 blue front
+  // 2 red back
+  // 3 blue back
+  switch (automode) {
+    case 0 : { //redfront
+      master.print(0, 1, "redfront:  %d", automode);
+      driveRelative(-2600 ,100); // move back a little to hit the flag
 
-  leftfront.move_relative  (distance, 200);
-  leftback.move_relative   (distance, 200);
-  rightfront.move_relative (distance, 200);
-  rightback.move_relative  (distance, 200);
 
-pros::delay(2000); // wait 2 sec until finished move.
-// need to adjust depend on distance
+      pros::delay (100);
+      driveRelative(4350 ,100); // move back a little to hit the flag
+      pros::delay (3000);
+      break;
 
-distance = (60*900)/(4*M_PI); // move 60 inch
+    }
 
-leftfront.move_relative  (distance, 200);
-leftback.move_relative   (distance, 200);
-rightfront.move_relative (distance, 200);
-rightback.move_relative  (distance, 200);
+    case 1 : { //bluefront
+      master.print(0, 1, "bluefront: %d", automode);
+      leftfront.tare_position ( );
+			rightfront.tare_position ( );
+      distance=725;
+      speed=50;
+      leftfront.move_relative  (distance, speed);
+      leftback.move_relative   (distance, speed);
+      rightfront.move_relative (-distance, speed);
+      rightback.move_relative  (-distance, speed);
+      pros::delay(2000);
+      pros::lcd::print(2, "left position: %f\n", leftfront.get_position());
+  		pros::lcd::print(3, "right position: %f\n", rightfront.get_position());
+      break;
+    }
+    case 2 : { //redback
+      master.print(0, 1, "redback:   %d", automode);
 
-pros::delay (3500);
+      driveRelative(-2400 ,100);
+      pros::delay(500);
 
-distance = 790; // turn 90 degree
+      ballintake.move(200);
+      pros::delay(1500);
+      ballintake.move(0);
 
-leftfront.move_relative  (-distance, 200);
-leftback.move_relative   (-distance, 200);
-rightfront.move_relative (distance, 200);
-rightback.move_relative  (distance, 200);
+      distance = (5*900)/(4*M_PI); // moves forward
+      leftfront.move_relative  (distance, 150);
+      leftback.move_relative   (distance, 150);
+      rightfront.move_relative (distance, 150);
+      rightback.move_relative  (distance, 150);
+      pros::delay(1000);
 
-pros::delay (500);// wait enghout time until finished move.
-// need to adjust depend on distance
+      distance = 760*side; // turn 90 degree left
 
-distance = -(65*900)/(4*M_PI); // move 65 inch back
+      leftfront.move_relative  (-distance, 100);
+      leftback.move_relative   (-distance, 100);
+      rightfront.move_relative (distance, 100);
+      rightback.move_relative  (distance, 100);
 
-leftfront.move_relative  (distance, 200);
-leftback.move_relative   (distance, 200);
-rightfront.move_relative (distance, 200);
-rightback.move_relative  (distance, 200);
+      pros::delay (1500);
 
-pros::delay (2500);
-*/
+      distance = -(40*900)/(4*M_PI); // move back onto the platform
+
+      leftfront.move_relative  (distance, 150);
+      leftback.move_relative   (distance, 150);
+      rightfront.move_relative (distance, 150);
+      rightback.move_relative  (distance, 150);
+
+      pros::delay (2000);
+      break;
+    }
+    case 3 : {
+      master.print(0, 1, "blueback:  %d", automode);
+      // some automode code here
+      break;
+      }
+    default : {
+      break;
+    }
+
+  }
+  master.clear();
 }
