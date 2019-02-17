@@ -15,7 +15,7 @@
  */
 int  automode=100;
 double speed =100.00;
-int distance;
+double distance;
 int side;    // 1 or -1 to make turning in opposite direction
 
 

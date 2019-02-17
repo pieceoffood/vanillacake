@@ -29,7 +29,9 @@ pros::ADIDigitalIn back (8); // use jumper to select front=0 and back=1
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-
+  lift.set_brake_mode          (pros::E_MOTOR_BRAKE_HOLD);
+  claw.set_brake_mode          (pros::E_MOTOR_BRAKE_HOLD);
+  catapult.set_brake_mode      (pros::E_MOTOR_BRAKE_HOLD);
 }
 
 /**

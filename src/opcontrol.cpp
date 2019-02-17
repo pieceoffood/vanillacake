@@ -30,19 +30,18 @@ void shootball() {
   if (limitswitchball.get_value()==1) {
     catapult.tare_position ( );
   }
-  if (catapult.get_position()>2000 && catapult.get_position()<2100 )
-  {
-    catapult.move_velocity  (15);
-  }		else
-  if ( catapult.get_position()>=2100 )
-  {
-    catapult.move_velocity  (50);
-  }		else
+  while (catapult.get_position()<2100 )
   {
     catapult.move_velocity  (100);
+    pros::delay(10);
+  }
+  catapult.move_velocity  (0);
+  pros::delay(500);
+  catapult.move_velocity  (100);
+  pros::delay(100);
+  catapult.move_velocity(0);
   }
 
-}
 
 
 void opcontrol() {
@@ -52,21 +51,18 @@ void opcontrol() {
 		int left  = master.get_analog (ANALOG_LEFT_Y);
 		int right = master.get_analog (ANALOG_RIGHT_X);
 
-		// chasis arcade drive
+		//print screen
+    pros::lcd::print(0, "limitswitch: %d, life position: %8.1f\n", limitswitch.get_value(), lift.get_position());
+		pros::lcd::print(1, "potentiameter: %d\n", potentiameter.get_value());
+		pros::lcd::print(2, "left: %8.1f, right %8.1f\n", leftfront.get_position(), rightfront.get_position());
+		pros::lcd::print(3, "catapult: %8.1f, reset %d\n", catapult.get_position(), limitswitchball.get_value());
+		pros::lcd::print(4, "claw: %8.1f\n", claw.get_position());
+
+    // chasis arcade drive
 			leftfront.move  (left - right);
 			leftback.move   (left - right);
 			rightfront.move (left + right);
 			rightback.move  (left + right);
-
-		//lift
-		//pros::potentiameter.get_value()
-		pros::lcd::print(0, "limitswitch: %d\n", limitswitch.get_value());
-		pros::lcd::print(1, "potentiameter: %d\n", potentiameter.get_value());
-		pros::lcd::print(2, "left position: %f\n", leftfront.get_position());
-		pros::lcd::print(3, "right position: %f\n", rightfront.get_position());
-    pros::lcd::print(4, "catapult position: %f\n", catapult.get_position());
-    pros::lcd::print(5, "claw position: %f\n", claw.get_position());
-    pros::lcd::print(6, "life position: %f\n", lift.get_position());
 
     if ( master.get_digital(DIGITAL_DOWN))  {
 			leftfront.tare_position ( );
@@ -74,7 +70,7 @@ void opcontrol() {
 		}
 
 
-
+    //lift
     if (limitswitch.get_value()==1) {
       lift.tare_position();  // reset lift encoude zero
     }
@@ -106,10 +102,10 @@ void opcontrol() {
 
 		//ballintake
 		if (master.get_digital (DIGITAL_A)) 	{
-			ballintake.move_velocity  (100);
+			ballintake.move_velocity  (200);
     }		else
 		if (master.get_digital (DIGITAL_Y))		{
-			ballintake.move_velocity  (-100);
+			ballintake.move_velocity  (-200);
 		}		else
 		{
 			ballintake.move_velocity  (0);
