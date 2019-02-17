@@ -11,6 +11,7 @@ extern pros::Motor ballintake     ;
 extern pros::Motor catapult   ;
 extern pros::Motor flipper    ;
 extern pros::Controller master;         // master control
+extern pros::Controller partner;        //partner control
 extern pros::ADIAnalogIn bumper;        // not use yet
 extern pros::ADIAnalogIn potentiameter; //potentiameter for claw
 extern pros::ADIAnalogIn ballshooterp; //potentiameter for catapult

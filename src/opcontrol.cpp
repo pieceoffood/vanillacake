@@ -6,6 +6,8 @@ cd .. (go up one level)
 prosv5 make clean (clean everything)
 prosv5 build-compile-commands (compile the code)
 prosv5 upload --slot 5 (upload the program to V5 slot 5)
+prosv5 v5 rm-all
+prosv5 v5 rm-file slot_4.bin --erase-all
 */
 
 /**
@@ -28,9 +30,13 @@ void shootball() {
   if (limitswitchball.get_value()==1) {
     catapult.tare_position ( );
   }
-  if (catapult.get_position()>100 && catapult.get_position()<200 )
+  if (catapult.get_position()>2000 && catapult.get_position()<2100 )
   {
-    catapult.move_velocity  (25);
+    catapult.move_velocity  (15);
+  }		else
+  if ( catapult.get_position()>=2100 )
+  {
+    catapult.move_velocity  (50);
   }		else
   {
     catapult.move_velocity  (100);
@@ -58,6 +64,10 @@ void opcontrol() {
 		pros::lcd::print(1, "potentiameter: %d\n", potentiameter.get_value());
 		pros::lcd::print(2, "left position: %f\n", leftfront.get_position());
 		pros::lcd::print(3, "right position: %f\n", rightfront.get_position());
+    pros::lcd::print(4, "catapult position: %f\n", catapult.get_position());
+    pros::lcd::print(5, "claw position: %f\n", claw.get_position());
+    pros::lcd::print(6, "life position: %f\n", lift.get_position());
+
     if ( master.get_digital(DIGITAL_DOWN))  {
 			leftfront.tare_position ( );
 			rightfront.tare_position ( );
@@ -65,11 +75,13 @@ void opcontrol() {
 
 
 
-
-		if (master.get_digital (DIGITAL_R1))
+    if (limitswitch.get_value()==1) {
+      lift.tare_position();  // reset lift encoude zero
+    }
+		if (master.get_digital (DIGITAL_R1) && lift.get_position()<3000) // limit lift up position
 		{
 			lift.move_velocity  (200);
-    }		else if (master.get_digital (DIGITAL_R2) && limitswitch.get_value()==0)
+    }		else if (master.get_digital (DIGITAL_R2) && limitswitch.get_value()==0) // stop the lift at lowest
 		{
 			lift.move_velocity  (-150);
     }		else
