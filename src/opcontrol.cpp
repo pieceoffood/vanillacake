@@ -6,6 +6,8 @@ cd .. (go up one level)
 prosv5 make clean (clean everything)
 prosv5 build-compile-commands (compile the code)
 prosv5 upload --slot 5 (upload the program to V5 slot 5)
+prosv5 v5 rm-all
+prosv5 v5 rm-file slot_4.bin --erase-all
 */
 
 /**
@@ -24,15 +26,22 @@ prosv5 upload --slot 5 (upload the program to V5 slot 5)
 
 void shootball() {
   //catapult
-  if (catapult.get_position()>100 && catapult.get_position()<200 )
-  {
-    catapult.move_velocity  (25);
-  }		else
+  //
+  if (limitswitchball.get_value()==1) {
+    catapult.tare_position ( );
+  }
+  while (catapult.get_position()<2100 )
   {
     catapult.move_velocity  (100);
+    pros::delay(10);
+  }
+  catapult.move_velocity  (0);
+  pros::delay(500);
+  catapult.move_velocity  (100);
+  pros::delay(100);
+  catapult.move_velocity(0);
   }
 
-}
 
 
 void opcontrol() {
@@ -41,27 +50,34 @@ void opcontrol() {
 	while(true){
 		int left  = master.get_analog (ANALOG_LEFT_Y);
 		int right = master.get_analog (ANALOG_RIGHT_X);
-    //pros::potentiameter.get_value()
-		pros::lcd::print(0, "limitswitch: %d\n", limitswitch.get_value());
+
+		//print screen
+    pros::lcd::print(0, "limitswitch: %d, life position: %8.1f\n", limitswitch.get_value(), lift.get_position());
 		pros::lcd::print(1, "potentiameter: %d\n", potentiameter.get_value());
-		pros::lcd::print(2, "left position: %f\n", leftfront.get_position());
-		pros::lcd::print(3, "right position: %f\n", rightfront.get_position());
+		pros::lcd::print(2, "left: %8.1f, right %8.1f\n", leftfront.get_position(), rightfront.get_position());
+		pros::lcd::print(3, "catapult: %8.1f, reset %d\n", catapult.get_position(), limitswitchball.get_value());
+		pros::lcd::print(4, "claw: %8.1f\n", claw.get_position());
 
-		// chasis arcade drive
+    // chasis arcade drive
+			leftfront.move  (left - right);
+			leftback.move   (left - right);
+			rightfront.move (left + right);
+			rightback.move  (left + right);
+
     if ( master.get_digital(DIGITAL_DOWN))  {
-      leftfront.tare_position ( );
-      rightfront.tare_position ( );
-    }
-		leftfront.move  (left - right);
-		leftback.move   (left - right);
-		rightfront.move (left + right);
-		rightback.move  (left + right);
+			leftfront.tare_position ( );
+			rightfront.tare_position ( );
+		}
 
-		//lift
-		if (master.get_digital (DIGITAL_R1))
+
+    //lift
+    if (limitswitch.get_value()==1) {
+      lift.tare_position();  // reset lift encoude zero
+    }
+		if (master.get_digital (DIGITAL_R1) && lift.get_position()<3000) // limit lift up position
 		{
 			lift.move_velocity  (200);
-    }		else if (master.get_digital (DIGITAL_R2) && limitswitch.get_value()==0)
+    }		else if (master.get_digital (DIGITAL_R2) && limitswitch.get_value()==0) // stop the lift at lowest
 		{
 			lift.move_velocity  (-150);
     }		else
@@ -86,10 +102,10 @@ void opcontrol() {
 
 		//ballintake
 		if (master.get_digital (DIGITAL_A)) 	{
-			ballintake.move_velocity  (100);
+			ballintake.move_velocity  (200);
     }		else
 		if (master.get_digital (DIGITAL_Y))		{
-			ballintake.move_velocity  (-100);
+			ballintake.move_velocity  (-200);
 		}		else
 		{
 			ballintake.move_velocity  (0);
