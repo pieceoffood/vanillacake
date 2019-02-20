@@ -53,6 +53,7 @@ void autonomous()
 
   redblue side; // make turn in opposite when on blueside
   frontback isfront;
+  automode=autoblue.get_value() + autoback.get_value()*2 +1;
   switch(automode)
   {
     case 1:

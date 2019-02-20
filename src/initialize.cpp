@@ -16,6 +16,8 @@ pros::ADIDigitalIn limitswitch  (1);
 pros::ADIAnalogIn potentiameter (2);
 pros::ADIAnalogIn ballshooterp  (3);
 pros::ADIDigitalIn limitswitchball(4);
+pros::ADIDigitalIn autoblue(9) ;
+pros::ADIDigitalIn autoback(10) ;
 
 
 /**

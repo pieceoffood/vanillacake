@@ -17,8 +17,11 @@ extern pros::ADIAnalogIn potentiameter; //potentiameter for claw
 extern pros::ADIAnalogIn ballshooterp; //potentiameter for catapult
 extern pros::ADIDigitalIn limitswitch ; //limitswitch for arm lift
 extern pros::ADIDigitalIn limitswitchball ; //limitswitch for ball shoot
+extern pros::ADIDigitalIn autoblue ; // blue=1 red=0
+extern pros::ADIDigitalIn autoback ; // front=0 back=1
 extern int automode;
 enum redblue {red = 1, blue = -1};
 enum frontback {front = 1, back = -1};
 extern redblue side;
+extern frontback isfront;
 #endif
