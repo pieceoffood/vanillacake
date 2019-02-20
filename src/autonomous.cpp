@@ -14,8 +14,6 @@
  * from where it left off.
  */
 int  automode=1;
-double speed =100.00;
-double distance;
 
 void moving (double distance, int speed)
 {
@@ -59,7 +57,7 @@ void autonomous()
     case 1:
     {
       side=red;
-        isfront=front;
+      isfront=front;
       break;
     }
     case 2:
