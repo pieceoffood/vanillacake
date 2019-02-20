@@ -52,7 +52,7 @@ void opcontrol() {
 		int right = master.get_analog (ANALOG_RIGHT_X);
 
 		//print screen
-    pros::lcd::print(0, "limitswitch: %d, life position: %8.1f\n", limitswitch.get_value(), lift.get_position());
+		pros::lcd::print(0, "limitswitch: %d, life position: %8.1f\n", limitswitch.get_value(), lift.get_position());
 		pros::lcd::print(1, "potentiameter: %d\n", potentiameter.get_value());
 		pros::lcd::print(2, "left: %8.1f, right %8.1f\n", leftfront.get_position(), rightfront.get_position());
 		pros::lcd::print(3, "catapult: %8.1f, reset %d\n", catapult.get_position(), limitswitchball.get_value());
@@ -74,7 +74,7 @@ void opcontrol() {
     if (limitswitch.get_value()==1) {
       lift.tare_position();  // reset lift encoude zero
     }
-		if (master.get_digital (DIGITAL_R1) && lift.get_position()<3000) // limit lift up position
+		if (master.get_digital (DIGITAL_R1) && lift.get_position()<3056) // limit lift up position
 		{
 			lift.move_velocity  (200);
     }		else if (master.get_digital (DIGITAL_R2) && limitswitch.get_value()==0) // stop the lift at lowest
@@ -85,14 +85,14 @@ void opcontrol() {
 			lift.move_velocity  (0);
 		}
 
-		// claw only activat during 1700- 2410
+		// claw only activat during 1700- 2600
 		// There is overshoot issue and this range 1850 - 2350 is right for coarse stop
 		if (master.get_digital (DIGITAL_L1) && potentiameter.get_value()>1700)
 		{
 
 			claw.move_velocity  (-100); // up/
 
-    }		else if (master.get_digital (DIGITAL_L2) && potentiameter.get_value()<2500)
+    }		else if (master.get_digital (DIGITAL_L2) && potentiameter.get_value()<2600)
 		{
 			claw.move_velocity  (100); // down
     }		else
@@ -106,7 +106,7 @@ void opcontrol() {
     }		else
 		if (master.get_digital (DIGITAL_Y))		{
 			ballintake.move_velocity  (-200);
-		}		else
+		}	else
 		{
 			ballintake.move_velocity  (0);
     }
