@@ -13,10 +13,9 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-int  automode=100;
+int  automode=1;
 double speed =100.00;
 double distance;
-int side;    // 1 or -1 to make turning in opposite direction
 
 void moving (double distance, int speed)
 {
@@ -52,38 +51,38 @@ void turning (int left, int speed)
 void autonomous()
 {
 
-  int side; // make turn in opposite when on blueside
-  int front;
+  redblue side; // make turn in opposite when on blueside
+  frontback isfront;
   switch(automode)
   {
     case 1:
     {
-      side=1;
-      front=1;
+      side=red;
+        isfront=front;
       break;
     }
     case 2:
     {
-      side=1;
-      front=0;
+      side=blue;
+      isfront=back;
       break;
     }
     case 3:
     {
-      side=-1;
-      front=1;
+      side=red;
+      isfront=front;
       break;
     }
     case 4:
     {
-      side=-1;
-      front=0;
+      side=blue;
+      isfront=back;
       break;
     }
     default:
     {
-      side=0;
-      front=0;
+      side=red;
+      isfront=front;
       break;
     }
   }
@@ -92,9 +91,9 @@ void autonomous()
   // 3 blue front
   // 2 red back
   // 4 blue back
-  switch (front) {
-    case 1 : { //front
-      if (side==-1) {
+  switch (isfront) {
+    case front : { //front
+      if (side==blue) {
         master.print   (0, 0, "bluefront: %d", automode);
       } else {
          master.print  (0, 0, "redfront:  %d", automode);
@@ -113,9 +112,8 @@ void autonomous()
 
     }
 
-    case 0 : { //back
-      if (side==-1) {
-
+    case back : { //back
+      if (side==blue) {
         master.print(0, 0, "blueback:  %d", automode);
       } else {
         master.print(0, 0, "redback:   %d", automode);
