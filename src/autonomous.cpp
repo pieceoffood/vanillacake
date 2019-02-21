@@ -13,7 +13,13 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-int  automode=1;
+int  automode=1;  // default automode is red front
+// 1 red front
+// 3 blue front
+// 2 red back
+// 4 blue back
+// 5 skill program 1
+// 6 skill program 2
 
 void moving (double distance, int speed)
 {
@@ -49,9 +55,17 @@ void turning (int left, int speed)
 void autonomous()
 {
 
-  redblue side; // make turn in opposite when on blueside
-  frontback isfront;
+  redblue side = red; // red or blude, make turn in opposite when on blue side
+  frontback isfront = front; // front or back
   automode=autoblue.get_value() + autoback.get_value()*2 +1;
+  // automode value are below
+  // 1 red front
+  // 3 blue front
+  // 2 red back
+  // 4 blue back
+  // 5 skill program 1
+  // 6 skill program 2
+
   switch(automode)
   {
     case 1:
@@ -86,10 +100,7 @@ void autonomous()
     }
   }
 
-  // 1 red front
-  // 3 blue front
-  // 2 red back
-  // 4 blue back
+
   switch (isfront) {
     case front : { //front
       if (side==blue) {
