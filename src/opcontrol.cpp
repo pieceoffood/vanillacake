@@ -107,10 +107,10 @@ void opcontrol() {
 		}
 
 	  	// chasis arcade
-			leftfront.move  (left - right);
-			leftback.move   (left - right);
-			rightfront.move (left + right);
-			rightback.move  (left + right);
+			leftfront.move  (left + right);
+			leftback.move   (left + right);
+			rightfront.move (left - right);
+			rightback.move  (left - right);
 
 		//lift
     if (limitswitch.get_value()==1)
@@ -162,11 +162,11 @@ void opcontrol() {
 
 		if (master.get_digital (DIGITAL_X))
 		{
-			catapult.move_velocity  (50);
+			catapult.move_velocity  (100);
     }		else
     if (master.get_digital(DIGITAL_B))
     {
-      catapult.move_absolute(2090, 50);
+      catapult.move_absolute(2090, 100);
     } else
 		{
 			catapult.move_velocity  (0);
