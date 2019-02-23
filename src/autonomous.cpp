@@ -13,40 +13,49 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-int  automode=1;  // default automode is red front
-// 1 red front
-// 3 blue front
-// 2 red back
-// 4 blue back
-// 5 skill program 1
-// 6 skill program 2
+void basemovement(double distance, int speed)
+{
+  double ticks=(distance*900)/(4*M_PI);
+  leftfront.move_relative  (ticks, speed);
+  leftback.move_relative   (ticks, speed);
+  rightfront.move_relative (ticks, speed);
+  rightback.move_relative  (ticks, speed);
+}
+void baseturn(int left, int speed)
+{
+  double ticks=735*left;
+  leftfront.move_relative  (ticks, speed);
+  leftback.move_relative   (ticks, speed);
+  rightfront.move_relative (-ticks, speed);
+  rightback.move_relative  (-ticks, speed);
+}
 
 void moving (double distance, int speed)
 {
+  double start = leftfront.get_position();
   double ticks = (distance*900)/(4*M_PI);
-  double startpoint = leftfront.get_position();
-  double error=fabs(ticks) - fabs(leftfront.get_position()-startpoint);
+  double target = leftfront.get_position() + ticks;
   leftfront.move_relative  (ticks, speed);
   leftback.move_relative   (ticks, speed);
   rightfront.move_relative (ticks, speed);
   rightback.move_relative  (ticks, speed);
 
-  while ( error>0 ) {
+  while (fabs (ticks) - fabs (leftfront.get_position() - start) > 0) {
     pros::delay(3);
   }
   pros::delay(10);
 }
 void turning (int left, int speed)
 {
+  double start = leftfront.get_position();
   double ticks = 735*left;
-  double startpoint = leftfront.get_position();
-  double error=fabs(ticks) - fabs(leftfront.get_position()-startpoint);
+  double target = leftfront.get_position() + ticks;
   leftfront.move_relative  (-ticks, speed);
   leftback.move_relative   (-ticks, speed);
   rightfront.move_relative (ticks, speed);
   rightback.move_relative  (ticks, speed);
 
-  while ( error>0 ) {
+  while (fabs (ticks) - fabs (leftfront.get_position() - start)> 0) {
     pros::delay(3);
   }
   pros::delay(10);
@@ -54,42 +63,39 @@ void turning (int left, int speed)
 
 void autonomous()
 {
+  redblue side;
+  frontback isfront;
 
-  redblue side = red; // red or blude, make turn in opposite when on blue side
-  frontback isfront = front; // front or back
-  automode=autoblue.get_value() + autoback.get_value()*2 +1;
-  // automode value are below
   // 1 red front
   // 3 blue front
   // 2 red back
   // 4 blue back
   // 5 skill program 1
   // 6 skill program 2
-
-  switch(automode)
+  switch(automode) // assign value to side and isfront based on the auto selection button pressed
   {
     case 1:
     {
-      side=red;
-      isfront=front;
+      side = red;
+      isfront = front;
       break;
     }
     case 2:
     {
-      side=blue;
-      isfront=back;
+      side = blue;
+      isfront = front;
       break;
     }
     case 3:
     {
-      side=red;
-      isfront=front;
+      side = red;
+      isfront = back;
       break;
     }
     case 4:
     {
-      side=blue;
-      isfront=back;
+      side = blue;
+      isfront = back;
       break;
     }
     default:
@@ -100,55 +106,62 @@ void autonomous()
     }
   }
 
+  if (automode>=1 && automode <=4 ) {
+    switch (isfront) {
+      case front : { //front
+        if (side==blue) {
+          master.print   (0, 0, "bluefront: %d", automode, blue, isfront);
+        } else {
+           master.print  (0, 0, "redfront:  %d", automode);
+        }
 
-  switch (isfront) {
-    case front : { //front
-      if (side==blue) {
-        master.print   (0, 0, "bluefront: %d", automode);
-      } else {
-         master.print  (0, 0, "redfront:  %d", automode);
+        moving (-45,100); // move back to hit the low flag
+        pros::delay (10);
+
+        moving (70, 100); //move forwards
+
+        turning   (1*side, 100); //turn left
+        pros::delay (10);
+
+        moving (-62, 150); //park on the platform
+
+        break;
+
       }
 
-      moving (-45, 100); // move back to hit the low flag
+      case back : { //back
+        if (side==red) {
 
-      moving (70, 100); //move forwards
+          master.print(0, 0, "blueback:  %d", automode);
+        } else {
+          master.print(0, 0, "redback:   %d", automode);
+        }
 
-      turning   (1*side, 100); //turn left
-      pros::delay (1000);
+        moving (-35, 100); //move forwards
 
-      moving (-62, 100); //park on the platform
+        ballintake.move (200); //get ball under cap
+        ballintake.move (0);
 
-      break;
+        moving (5, 50); //forwards
 
-    }
+        turning     (-1*side, 50); //turn right
+        pros::delay  (1500);
 
-    case back : { //back
-      if (side==blue) {
-        master.print(0, 0, "blueback:  %d", automode);
-      } else {
-        master.print(0, 0, "redback:   %d", automode);
+        moving     (-42, 150); //park on the platoform
+
+        break;
+      }
+      default : {
+        break;
       }
 
-
-      moving (-35, 100); //move forwards
-
-      ballintake.move (200); //get ball under cap
-      pros::delay  (1500);
-      ballintake.move (0);
-
-      moving (5, 100); //forwards
-
-      turning     (-1*side, 100); //turn right
-
-
-      moving     (-42, 100);
-
-      break;
     }
-    default : {
-      break;
-    }
-
+  } else  if (automode == 5)
+  {
+    //skill 1 program
+  } else if (automode ==6 )
+  {
+    //skill 2 program
   }
   master.clear();
 }
