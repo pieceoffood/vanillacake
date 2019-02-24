@@ -43,7 +43,7 @@ void moving (double distance, int speed)
   while (fabs (ticks) - fabs (leftfront.get_position() - start) > 0) {
     pros::delay(3);
   }
-  pros::delay(10);
+  pros::delay(50);
 }
 void turning (int left, int speed)
 {
@@ -58,7 +58,7 @@ void turning (int left, int speed)
   while (fabs (ticks) - fabs (leftfront.get_position() - start)> 0) {
     pros::delay(3);
   }
-  pros::delay(10);
+  pros::delay(50);
 }
 
 void autonomous()
@@ -67,8 +67,8 @@ void autonomous()
   frontback isfront;
 
   // 1 red front
-  // 3 blue front
-  // 2 red back
+  // 2 blue front
+  // 3 red back
   // 4 blue back
   // 5 skill program 1
   // 6 skill program 2
@@ -100,8 +100,6 @@ void autonomous()
     }
     default:
     {
-      side=red;
-      isfront=front;
       break;
     }
   }
@@ -116,12 +114,13 @@ void autonomous()
         }
 
         moving (-45,100); // move back to hit the low flag
-        pros::delay (10);
+        //pros::delay(10);
 
         moving (70, 100); //move forwards
+        //pros::delay(10);
 
-        turning   (1*side, 100); //turn left
-        pros::delay (10);
+        turning   (-1*side, 100); //turn left
+        //pros::delay (10);
 
         moving (-62, 150); //park on the platform
 
@@ -140,13 +139,12 @@ void autonomous()
         moving (-35, 100); //move forwards
 
         ballintake.move (200); //get ball under cap
+        pros::delay(1000);
         ballintake.move (0);
 
         moving (5, 50); //forwards
 
-        turning     (-1*side, 50); //turn right
-        pros::delay  (1500);
-
+        turning     (1*side, 50); //turn right
         moving     (-42, 150); //park on the platoform
 
         break;
