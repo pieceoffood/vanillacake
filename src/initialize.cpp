@@ -19,8 +19,8 @@ pros::ADIAnalogIn ballshooterp  (3);
 pros::ADIDigitalIn limitswitchball(4);
 int automode = 0;
 // 1 red front
-// 3 blue front
-// 2 red back
+// 2 blue front
+// 3 red back
 // 4 blue back
 // 5 skill program 1
 // 6 skill program 2
@@ -28,13 +28,13 @@ int automode = 0;
 static lv_res_t btnm_action(lv_obj_t * btnm, const char *txt)
 {
     printf("Button: %s released\n", txt);
-    if (strcmp(txt, "redfront"))  automode=1;
-    else if (strcmp(txt, "bluefront")) automode=2;
-    else if (strcmp(txt, "redback"))   automode=3;
-    else if (strcmp(txt, "bluefront")) automode=4;
-    else if (strcmp(txt, "skill 1"))   automode=5;
-    else if (strcmp(txt, "skill 2"))   automode=6;
-    else if (strcmp(txt, "no auto"))   automode=7;
+    if (strcmp(txt, "redfront")==0)  automode=1;
+    else if (strcmp(txt, "bluefront")==0) automode=2;
+    else if (strcmp(txt, "redback")==0)   automode=3;
+    else if (strcmp(txt, "blueback")==0) automode=4;
+    else if (strcmp(txt, "skill 1")==0)   automode=5;
+    else if (strcmp(txt, "skill 2")==0)   automode=6;
+    else if (strcmp(txt, "no auto")==0)   automode=7;
     else automode=8;
     return LV_RES_OK; /*Return OK because the button matrix is not deleted*/
 }
@@ -98,9 +98,6 @@ style_btn_pr.body.grad_color = LV_COLOR_MAKE(0x37, 0x62, 0x90);
 style_btn_pr.text.color = LV_COLOR_MAKE(0xbb, 0xd5, 0xf1);
 lv_btnm_set_style(btnm1, LV_BTNM_STYLE_BTN_REL, &style_btn_rel);
 lv_btnm_set_style(btnm1, LV_BTNM_STYLE_BTN_PR, &style_btn_pr);
-
-
-
 
 
   master.print(0, 0, "automode: %d", automode);
