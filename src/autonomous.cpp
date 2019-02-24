@@ -157,6 +157,21 @@ void autonomous()
   } else  if (automode == 5)
   {
     //skill 1 program
+    master.clear();
+    master.print(0, 0, "automode:  %d%d%d", automode, blue, isfront);
+    moving (36, 100);
+    claw.move_absolute(750,200); // close claw
+    pros::delay(500);
+    lift.move_absolute(150, 200);// lift up a little
+    moving (-36, 100);
+    lift.move_absolute(0, 100);// lift down
+    pros::delay(500);
+    claw.move_absolute(0,200); // claw open
+    pros::delay(500);
+    lift.move_absolute(450, 200);
+    pros::delay(500);
+    lift.move_absolute(0, 200);
+    pros::delay(500);
   } else if (automode ==6 )
   {
     //skill 2 program
