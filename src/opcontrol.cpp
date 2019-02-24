@@ -155,19 +155,27 @@ void opcontrol() {
 			ballintake.move_velocity  (0);
     }
 
-		//catapult
-    if (limitswitchball.get_value()==1) {
+    //catapult
+		if (limitswitchball.get_value()==1) {
       catapult.tare_position ( );  // reset catapult encoder position to zero
     }
-		if (partner.get_digital (DIGITAL_X))
-		{
-			catapult.move_relative  (1000,100);// to loading position
-    }		else if (partner.get_digital(DIGITAL_DOWN))
+
+		if (master.get_digital (DIGITAL_X)) // shoot ball
 		{
 			catapult.move_velocity  (100);
-    } else {
+    }		else
+		if (master.get_digital(DIGITAL_B)) // load ball
+    {
+      while (limitswitchball.get_value()==1) {
+				catapult.move_velocity  (100);
+				catapult.tare_position ( );
+				pros::delay(3);
+			}
+      catapult.move_absolute(2090, 100);
+		}	 else
+		{
 			catapult.move_velocity  (0);
-		}
+    }
 	pros::delay (10);
 	}
 }
