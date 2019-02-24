@@ -167,7 +167,7 @@ void autonomous()
     lift.move_absolute(0, 100);// lift down
     pros::delay(500);
     claw.move_absolute(0,200); // claw open
-    pros::delay(500);
+    pros::delay(1000);
     lift.move_absolute(450, 200);
     pros::delay(500);
     lift.move_absolute(0, 200);
