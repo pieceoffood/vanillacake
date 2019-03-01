@@ -15,7 +15,7 @@ pros::Motor ballintake (19, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCOD
 pros::Motor catapult   (13, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_COUNTS);
 pros::ADIDigitalIn limitswitch  (1);
 pros::ADIAnalogIn potentiameter (2);
-pros::ADIAnalogIn ballshooterp  (3);
+pros::ADIGyro gyro  (3);
 pros::ADIDigitalIn limitswitchball(4);
 int automode = 0;
 // 1 red front

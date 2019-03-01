@@ -40,10 +40,10 @@ void moving (double distance, int speed)
   rightfront.move_relative (ticks, speed);
   rightback.move_relative  (ticks, speed);
 
-  while (fabs (ticks) - fabs (leftfront.get_position() - start) > 0) {
+  while (fabs (ticks) - fabs (leftfront.get_position() - start) > 50) {
     pros::delay(3);
   }
-  pros::delay(50);
+  pros::delay(100);
 }
 void turning (int left, int speed)
 {
@@ -55,10 +55,50 @@ void turning (int left, int speed)
   rightfront.move_relative (ticks, speed);
   rightback.move_relative  (ticks, speed);
 
-  while (fabs (ticks) - fabs (leftfront.get_position() - start)> 0) {
+  while (fabs (ticks) - fabs (leftfront.get_position() - start)> 50) {
     pros::delay(3);
   }
-  pros::delay(50);
+  pros::delay(100);
+}
+
+void gyroTurn(double degree, int speed) // right=positive and let=negative
+{
+  lv_obj_t * txt = lv_label_create(lv_scr_act(), NULL);
+  //lv_obj_set_style(txt, &style_txt);                    /*Set the created style*/
+  lv_label_set_long_mode(txt, LV_LABEL_LONG_BREAK);     /*Break the long lines*/
+  lv_label_set_recolor(txt, true);                      /*Enable re-coloring by commands in the text*/
+  lv_label_set_align(txt, LV_LABEL_ALIGN_LEFT);       /*Center aligned lines*/
+  lv_label_set_text(txt, NULL);
+  lv_obj_set_width(txt, 300);                           /*Set a width*/
+  lv_obj_align(txt, NULL, LV_ALIGN_CENTER, 0, 20);      /*Align to center*/
+
+  gyro.reset();
+
+  double start=gyro.get_value();
+  double target=start+degree*10;
+  int turnside;
+  char mytext[100];
+  if (degree>0) {
+    turnside=-1;
+  } else turnside=1;
+  while (fabs(fabs(target)-fabs(gyro.get_value())) >2 ) {
+    leftfront.move(speed*turnside);
+    leftback.move(speed*turnside);
+    rightfront.move(-speed*turnside);
+    rightback.move(-speed*turnside);
+    pros::delay(5);
+    lv_label_set_text(txt, NULL);
+    printf("gyro start %8.2f, target %8.2f, gyro %8.2f\n", start, target,gyro.get_value());
+    sprintf(mytext, "gyro start %8.2f\n, target %8.2f\n, gyro %8.2f\n", start, target,gyro.get_value()
+         );
+    lv_label_set_text(txt, mytext);
+  }
+
+  leftfront.move(0);
+  leftback.move(0);
+  rightfront.move(0);
+  rightback.move(0);
+
 }
 
 void autonomous()

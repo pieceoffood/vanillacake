@@ -14,7 +14,7 @@ extern pros::Controller master;         // master control
 extern pros::Controller partner;        //partner control
 extern pros::ADIAnalogIn bumper;        // not use yet
 extern pros::ADIAnalogIn potentiameter; //potentiameter for claw
-extern pros::ADIAnalogIn ballshooterp; //potentiameter for catapult
+extern pros::ADIGyro gyro; //gyro
 extern pros::ADIDigitalIn limitswitch ; //limitswitch for arm lift
 extern pros::ADIDigitalIn limitswitchball ; //limitswitch for ball shoot
 extern pros::ADIDigitalIn autoblue ; // blue=1 red=0
