@@ -128,3 +128,39 @@ void ballLoad () {
   }
   catapult.move_absolute(2090, 100);
 }
+
+
+void clawmove(int openclose, int speed) //open=1 close=-1
+{
+  switch (openclose) {
+    case 1 :
+    {
+      claw.move_absolute(0, speed);
+      break;
+    }
+    case -1 :
+    {
+      claw.move_absolute(600, speed);
+      break;
+    }
+    default:
+    {
+
+    }
+  }
+}
+
+void flip ()
+{
+  // flip cat
+  lift.move_absolute       (450, 200); // flips first cap
+  while (lift.get_position()<440) {
+    pros::delay(5);
+  }
+  pros::delay              (50);
+  lift.move_absolute       (0, 200); // flips first cap
+  while (lift.get_position()>50) {
+    pros::delay(5);
+  }
+  pros::delay              (50);
+}

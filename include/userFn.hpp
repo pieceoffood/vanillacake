@@ -15,4 +15,8 @@ void gyroTurn(double degree, int speed); // right=positive and let=negative
 
 void ballLoad();
 
+void clawmove(int openclose, int speed); //open=1 close=-1
+
+void flip();
+
 #endif

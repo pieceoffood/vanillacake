@@ -79,27 +79,26 @@
      switch (isfront) {
        case front : { //////////////////////// front ///////////////////////////
          if (side==blue) {
-           master.print   (0, 0, "bluefront: %d", automode, blue, isfront);
+           master.print   (0, 0, "bluefront: %d, %d, %d", automode, blue, isfront);
          } else {
-            master.print  (0, 0, "redfront:  %d", automode);
+            master.print  (0, 0, "redfront:  %d, %d, %d", automode, blue, isfront);
          }
 
-         turnDegree       (-15*side,100);
+         turnDegree       (15*side,100);
 
          ballLoad();
-         catapult.move_absolute   (2090, 100); // shoots ball at hight flag
          pros::delay              (1650);
 
          catapult.move_relative   (500, 100); //shoot ball
          pros::delay              (100);
 
-         turnDegree               (15*side, 100); // turns
+         turnDegree               (-15*side, 100); // turns
 
          moving                   (-45, 100); // move back to hit the low flag
 
          moving                   (70, 100); //move forwards
 
-         turning                  (1*side, 95); //turn left
+         turning                  (-1*side, 95); //turn left
 
          moving                   (62, 150); //park on the platform
 
@@ -110,9 +109,9 @@
        case back : { /////////////////////// back //////////////////////////////
          if (side==red) {
 
-           master.print(0, 0, "blueback:  %d", automode);
+           master.print(0, 0, "blueback:  %d, %d, %d", automode, blue, isfront);
          } else {
-           master.print(0, 0, "redback:   %d", automode);
+           master.print(0, 0, "redback:   %d, %d, %d", automode, blue, isfront);
          }
 
          moving          (-34, 100); //move forwards
@@ -124,7 +123,7 @@
 
          moving          (5, 50); // forwards
 
-         turning         (-1*side, 50); // turn left
+         turning         (1*side, 50); // turn left
 
          moving          (42, 150); // park on the platoform
 
@@ -151,17 +150,17 @@
 
      moving                   (36, 100); //move back
 
-     turning                  (1*side, 100); //turn left
+     turning                  (-1*side, 100); //turn left
 
      moving                   (-16, 50);
      pros::delay              (300);
 
-     turnDegree               (-15*side, 100);
+     turnDegree               (15*side, 100);
 
      catapult.move_relative   (1000, 100); //shoot ball at hight flag
      pros::delay              (500);
 
-     turnDegree               (15*side, 100); // turns
+     turnDegree               (-15*side, 100); // turns
      pros::delay              (10);
 
      leftfront.move           (0); // stops base
@@ -179,83 +178,12 @@
    {
 
      //skill 1 program
-     //skill 1 program
-     //master.clear();
-     //master.print(0, 0, "automode:  %d%d%d", automode, blue, isfront);
+     master.clear();
+     master.print(0, 0, "automode:  %d ", automode);
 
      //////////////////////////////// skill 1 //////////////////////////////////
 
-     ballLoad();
 
-     ballintake.move_relative (3000, 2000); // intakes another ball
-     pros::delay              (2000);
-
-     moving                   (-36,100); // moves to shoot ball
-
-     catapult.move_relative   (500, 100); // shoot ball
-     pros::delay              (3000);
-
-     turning                  (1*side, 100); // turns
-
-     moving                   (-3, 100); // hits first flag
-
-     moving                   (22, 100); // move forwards
-
-     turning                  (1*side, 55); // turn to the right
-     pros::delay              (575);
-
-     moving                   (24, 100); // moves to first cap
-
-     claw.move_absolute       (750, 200); // close claw on first cap
-     pros::delay              (500);
-
-     lift.move_absolute       (150, 200); // lift up a little
-
-     moving                   (-15, 100); // moves back
-
-     turning                  (1*side, 100); // turn to the right
-
-     moving                   (8, 100); // move forwards to second cap
-
-     lift.move_absolute       (0, 100); // lift stops
-     pros::delay              (500);
-
-     claw.move_absolute       (-750, 200); // claw opens
-     pros::delay              (1000);
-
-     lift.move_absolute       (450, 200); // flips first cap
-     pros::delay              (500);
-
-     lift.move_absolute       (0, 200); // stops lift
-     pros::delay              (550);
-
-     turning                  (1*side, 125); // turn to the right
-
-     moving                   (-28, 100); // move back
-
-     turning                  (1*side, 125); // turn to right
-
-     moving                   (-20, 100); // hit the second low flag
-
-     moving                   (24, 100); // forwards
-
-     turning                  (1*side, 100); // turn rightback
-
-     moving                   (42, 100); // move to second cap
-
-     claw.move_absolute       (750, 200); // claw closes
-     pros::delay              (1000);
-
-     lift.move_absolute       (150, 200); // lift up a little
-
-     claw.move_absolute       (-750, 200); // claw open
-     pros::delay              (1000);
-
-     lift.move_absolute       (450, 200); // flips second cap
-     pros::delay              (500);
-
-     lift.move_absolute       (0, 200); // stops lift
-     pros::delay              (500);
 
 
    } else if (automode == 8)
@@ -273,18 +201,18 @@
 
      moving                 (35, 100); // move back
 
-     turning                (1, 100); // turn left
+     turning                (-1, 100); // turn left
 
      moving                 (-6, 100); // move backwards
      pros::delay(100);
 
-     turnDegree             (-15, 50); // turns
+     turnDegree             (15, 50); // turns
      pros::delay(100);
 
      catapult.move_relative (1000, 100); // shoot ball
      pros::delay            (500);
 
-     turnDegree             (15, 100); // turn
+     turnDegree             (-15, 100); // turn
      pros::delay            (100);
 
      leftfront.move         (0); // stops base
@@ -296,7 +224,7 @@
 
      moving                 (67, 100); // moves forwards away from flag to park
 
-     turning                (1*side, 100); // turns to the left
+     turning                (-1*side, 100); // turns to the left
 
      moving                 (42, 200); // parks on alliance
 
