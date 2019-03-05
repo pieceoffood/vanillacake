@@ -1,6 +1,8 @@
 #include "main.h"
-#include "config.hpp"
 #include <iomanip>
+#include "cmath"
+#include "config.hpp"
+#include "userFn.hpp"
 /*
 cd (change directory)
 cd .. (go up one level)
@@ -24,25 +26,7 @@ prosv5 v5 rm-file slot_4.bin --erase-all
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
- void shootball() {
-   //catapult
-   //
-   if (limitswitchball.get_value()==1) {
-     catapult.tare_position ( );
-   }
-   if (catapult.get_position()>1800 && catapult.get_position()<2100 )
-   {
-     catapult.move_velocity  (15);
-   }		else
-   if ( catapult.get_position()>=2100 )
-   {
-     catapult.move_velocity  (50);
-   }		else
-   {
-     catapult.move_velocity  (100);
-   }
 
- }
 void opcontrol() {
   //pros::lcd::initialize();
   std::cout << std::fixed;
@@ -166,12 +150,7 @@ void opcontrol() {
     }		else
 		if (master.get_digital(DIGITAL_B)) // load ball
     {
-      while (limitswitchball.get_value()==1) {
-				catapult.move_velocity  (100);
-				catapult.tare_position ( );
-				pros::delay(3);
-			}
-      catapult.move_absolute(2090, 100);
+      ballLoad ();
 		}	 else
 		{
 			catapult.move_velocity  (0);
