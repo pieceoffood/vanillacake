@@ -11,7 +11,7 @@ void basemovement(double distance, int speed)
   rightback.move_relative  (ticks, speed);
 }
 
-void baseturn(int left, int speed) // right=positive and let=negative
+void baseturn(int left, int speed) // right=positive and left=negative
 {
   double ticks=735*left;
   leftfront.move_relative  (ticks, speed);
@@ -33,12 +33,14 @@ void moving (double distance, int speed)
 
   while (fabs (ticks) - fabs (leftfront.get_position() - start) > 50) {
     pros::delay(3);
+    printf("moving lf %8.2f rf %8.2f  target %8.2f",
+    leftfront.get_position(), rightfront.get_position(), target);
   }
   pros::delay(100);
 }
 
 
-void turning (int left, int speed) // right=positive and let=negative
+void turning (int left, int speed) // right=positive and left=negative
 {
   double start = leftfront.get_position();
   double ticks = 735*left;
@@ -50,12 +52,14 @@ void turning (int left, int speed) // right=positive and let=negative
 
   while (fabs (ticks) - fabs (leftfront.get_position() - start)> 50) {
     pros::delay(3);
+    printf("turing lf %8.2f rf %8.2f  target %8.2f",
+    leftfront.get_position(), rightfront.get_position(), target);
   }
   pros::delay(100);
 }
 
 
-void turnDegree(double degree, int speed) // right=positive and let=negative
+void turnDegree(double degree, int speed) // right=positive and left=negative
 {
   double start;
   double ticks = 735.0/90*degree;
@@ -68,14 +72,14 @@ void turnDegree(double degree, int speed) // right=positive and let=negative
 
   while (fabs (ticks) - fabs (leftfront.get_position() - start)> 50) {
     pros::delay(3);
-    printf("moveDegree start %8.2f, target %8.2f, ticks %8.2f, position %8.2f condition, %d \n",
-    start, target, ticks, leftfront.get_position(),
+    printf("turnDegree start %8.2f, target %8.2f, ticks %8.2f, lf position %8.2f rf position %8.2f condition, %d \n",
+    start, target, ticks, leftfront.get_position(), rightfront.get_position(),
     fabs (ticks) - fabs (leftfront.get_position() - start)> 0);
   }
   pros::delay(100);
 }
 
-void gyroTurn(double degree, int speed) // right=positive and let=negative
+void gyroTurn(double degree, int speed) // right=positive and left=negative
 {
   lv_obj_t * txt = lv_label_create(lv_scr_act(), NULL);
   //lv_obj_set_style(txt, &style_txt);                    /*Set the created style*/
@@ -93,8 +97,8 @@ void gyroTurn(double degree, int speed) // right=positive and let=negative
   int turnside;
   char mytext[100];
   if (degree>0) {
-    turnside=-1;
-  } else turnside=1;
+    turnside=1;
+  } else turnside=-1;
   while (fabs(fabs(target)-fabs(gyro.get_value())) >2 ) {
     leftfront.move(speed*turnside);
     leftback.move(speed*turnside);
