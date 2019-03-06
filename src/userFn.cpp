@@ -90,7 +90,7 @@ void gyroTurn(double degree, int speed) // right=positive and left=negative
   lv_obj_set_width(txt, 300);                           /*Set a width*/
   lv_obj_align(txt, NULL, LV_ALIGN_CENTER, 0, 20);      /*Align to center*/
 
-  gyro.reset();
+  //gyro.reset();
 
   double start=gyro.get_value();
   double target=start+degree*10;
