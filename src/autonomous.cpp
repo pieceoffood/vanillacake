@@ -14,10 +14,26 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
+ typedef struct {
+   int speed;
+ } my_task_arg;
 
+ void my_task_fn(void* argument) {
+   // Following two lines get the members of the my_task_arg struct
+   int speed = ((my_task_arg*)argument)->speed;
+   while (limitswitchball.get_value()==1) {
+     catapult.move_velocity  (100);
+     catapult.tare_position ( );
+     pros::delay(3);
+   }
+   catapult.move_absolute(2090, 100);
+ }
 
  void autonomous()
  {
+   my_task_arg* argument = new my_task_arg();
+   argument->speed = 100;
+   pros::Task my_task(my_task_fn, argument);
 
    redblue side=red;
    frontback isfront=front;
