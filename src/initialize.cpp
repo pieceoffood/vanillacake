@@ -47,11 +47,6 @@ static lv_res_t btnm_action(lv_obj_t * btnm, const char *txt)
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-  lift.set_brake_mode          (pros::E_MOTOR_BRAKE_HOLD);
-  claw.set_brake_mode          (pros::E_MOTOR_BRAKE_HOLD);
-  catapult.set_brake_mode      (pros::E_MOTOR_BRAKE_HOLD);
-
-
 
 	/*Create a title label*/
 lv_obj_t * label = lv_label_create(lv_scr_act(), NULL);

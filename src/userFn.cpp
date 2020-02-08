@@ -121,12 +121,14 @@ void gyroTurn(double degree, int speed) // right=positive and left=negative
 
 
 void ballLoad () {
-  while (limitswitchball.get_value()==1) {
+  if (limitswitchball.get_value()==1) {
     catapult.move_velocity  (100);
     catapult.tare_position ( );
-    pros::delay(3);
+    //pros::delay(3);
   }
-  catapult.move_absolute(2090, 100);
+  else {
+    catapult.move_absolute(2090, 100);
+  }
 }
 
 
@@ -163,4 +165,52 @@ void flip ()
     pros::delay(5);
   }
   pros::delay              (50);
+}
+
+
+//https://www.vexforum.com/t/gyroscope-drift-detection/64448/8
+//Gyroscope Drift Detection
+#define WHEEL_DIAMETER 1
+float gyroValue = 0;
+float moveTick,moveFix,moveBuffer;
+float leftSpeed,rightSpeed;
+
+pros::Task absDriveService(){
+  float leftPos,rightPos,fix;
+  while(1){
+    leftPos = leftfront.get_position();
+    rightPos = rightfront.get_position();
+    gyroValue = gyro.get_value();
+    //fabs is same as abs but for floats
+    if( fabs(leftPos) >= moveTick || fabs(rightPos) >= moveTick){
+      leftfront.move(0);
+      rightfront.move(0);
+      break;
+    }
+    if( fabs(gyroValue) > moveBuffer){
+      fix = gyroValue * moveFix;
+      leftSpeed += fix;
+      rightSpeed -= fix;
+      leftfront.move(leftSpeed);
+      rightfront.move(rightSpeed);
+    }
+  //to prevent overload
+  pros::delay(5);
+  }
+}
+//tune the default value of fix and buffer yourself
+void absForward(int cm, int speed, int fix = 3, int buffer = 1){
+  //tare position
+  leftfront.tare_position();
+  rightfront.tare_position();
+  //this just set motor speeds, this is not the typical way you do it, but is just a feature of mine
+  leftSpeed = speed;
+  rightSpeed = speed;
+  leftfront.move(speed);
+  rightfront.move(speed);
+  //converts cm to ticks, but tune "WHEEL_DIAMETER" yourself
+  moveTick = ((cm / (WHEEL_DIAMETER * 3.14159)) * 900);
+  moveFix = fix;
+  moveBuffer = buffer;
+  absDriveService();
 }
